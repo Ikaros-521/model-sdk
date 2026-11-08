@@ -1,0 +1,34 @@
+Standalone Model SDK
+
+Source: DeepSeek Harness, https://github.com/deepseek-ai/deepseek-harness
+Local reviewed source repository: E:/Github_Pro/deepseek-harness
+Verified source commit: 8bd073392eef6f54e921a093b95076248eb08cbb
+License: MIT; original Copyright (c) 2026 DeepSeek retained in LICENSE.
+
+Directly adapted upstream source:
+- packages/llm/llm/src/{types,brand,message,content,assembler,assistant-stream,error,adapter-failure,api-key,call-config}.ts
+- packages/util/values/src/index.ts (JSON snapshot and freezing utilities)
+- packages/attachment/attachment/src/{types,request-projection}.ts (image reference vocabulary and geometry)
+- packages/llm/llm-pi-ai/src/{context,replay,stream,models}.ts (pure model/conversation conversion)
+- packages/llm/llm-deepseek/src/{replay,translate,serialize,transport,sse,files-api,file-id,messages-api,wire-types,image-tokens,images,request-pricing}.ts
+- patches/@earendil-works__pi-ai@1.3.0.patch
+
+Upstream core/message/content/property/context/conversion/tool-argument-streaming
+regression tests are adapted under test/upstream-*.test.ts. Additional tests cover
+standalone lifecycle/auth/embedding/discovery and actual local HTTP protocols.
+
+Standalone integration replaces Cordis, session/settings/home services and timer
+plugins with explicit provider/credential/attachment ports. It has no dependency
+on the AI Employee OS platform. Runtime, retry policy execution and independent
+OpenAI embeddings are adapted for ordinary Node.js projects.
+
+Bundled dependency: @earendil-works/pi-ai exactly 1.3.0 (MIT).
+Its full published package, original licenses and transitive runtime dependencies
+are included via npm bundleDependencies. Six distributed dist/api JavaScript files
+carry the above Harness patch. dist/pi-ai-patch-manifest.json records their SHA256
+identities, and scripts/verify-consumer.mjs verifies the installed tarball contents.
+No consumer postinstall script or pnpm patch mechanism is required.
+
+This SDK provides protocol implementations and catalog metadata, not a claim that
+every catalog provider/model/account was tested against its live service. Tests
+use local HTTP fixtures only; real model requests and OAuth logins were not run.

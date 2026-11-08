@@ -1,0 +1,5 @@
+export { createDeepSeekProvider } from './adapter.js'
+export type { DeepSeekProviderOptions, DeepSeekProvider, DeepSeekModel, DeepSeekCatalogModel } from './types.js'
+export { DEFAULT_MODELS } from './models.js'
+export { DeepSeekFilesClient, DeepSeekFilesError } from './files-api.js'
+export { deepSeekImageTokens, deepSeekRequestImageDimensions } from './image-tokens.js'

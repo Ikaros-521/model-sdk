@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>模型测试台 · Model SDK</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header class="topbar"><a class="brand" href="/"><span class="brand-mark">M<span>↗</span></span><span>模型测试台<small>MODEL SDK / LOCAL PLAYGROUND</small></span></a><div class="local"><i></i> 本地运行 · 密钥不落盘</div></header>
+<main>
+<section class="intro"><div><div class="eyebrow">WORKBENCH / 01</div><h1>连接模型，<em>看见结果。</em></h1><p>独立 SDK 的轻量测试环境。选择平台，发送一条消息，即可检查调用、流式响应和用量。</p></div><span class="version">SDK <b>0.1</b></span></section>
+<div class="workspace">
+<aside class="configuration">
+<div class="section-head"><h2><span>01</span> 连接配置</h2><span class="tag">仅当前页面</span></div>
+<form id="config-form">
+<label for="mode">连接方式</label><select id="mode"><option value="catalog">内置平台目录</option><option value="custom">自定义兼容端点</option><option value="deepseek">DeepSeek 官方 Messages</option></select>
+<div id="provider-field"><label for="provider">模型平台 <span id="provider-count"></span></label><select id="provider" disabled><option>正在加载平台…</option></select></div>
+<div id="protocol-field" hidden><label for="protocol">API 协议</label><select id="protocol"><option value="openai-completions">OpenAI Chat Completions</option><option value="openai-responses">OpenAI Responses</option><option value="anthropic-messages">Anthropic Messages</option><option value="google-generative-ai">Google Generative AI</option></select></div>
+<div id="endpoint-field" hidden><label for="base-url">API 根地址</label><input id="base-url" type="url" placeholder="https://api.example.com/v1" autocomplete="off"><small>填写 API 根地址，不包含 /chat/completions。</small></div>
+<label for="api-key">API Key <span class="required">必填</span></label><div class="secret-input"><input id="api-key" type="password" placeholder="输入平台密钥" autocomplete="off" spellcheck="false"><button type="button" id="toggle-key" aria-label="显示密钥" aria-pressed="false">显示</button></div>
+<label for="model">模型 ID</label><div class="model-row"><input id="model" list="model-options" placeholder="选择或输入模型 ID" autocomplete="off"><button type="button" class="square" id="discover" title="从平台发现模型" aria-label="发现模型">↻</button></div><datalist id="model-options"></datalist><small id="model-hint">模型列表来自 SDK 离线目录；可点击 ↻ 发现。</small>
+<div class="field-pair"><div><label for="max-tokens">最大输出 Tokens</label><input id="max-tokens" type="number" min="1" max="131072" value="2048"></div><div><label for="timeout">超时 / 秒</label><input id="timeout" type="number" min="1" max="300" value="60"></div></div>
+<details class="advanced"><summary>高级选项 <span>＋</span></summary><label for="reasoning">推理强度</label><select id="reasoning"><option value="">使用模型默认值</option><option value="off">关闭</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select><label for="system">系统指令</label><textarea id="system" rows="3" placeholder="可选：设置回答风格或测试要求"></textarea></details>
+</form>
+<div class="privacy"><span>◇</span><p>配置只保留在页面内存中。请求经本机 SDK 发往你选择的平台；实际调用可能产生费用。</p></div>
+</aside>
+<section class="test-area">
+<div class="section-head"><h2><span>02</span> 测试会话</h2><button type="button" class="text-button" id="clear">清空会话</button></div>
+<div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
+<div class="conversation" id="conversation" aria-label="测试会话记录"><div class="empty" id="empty"><div class="empty-art" aria-hidden="true">[ <span>∗</span> ]</div><h3>一条消息，开始测试</h3><p>回复与推理过程会显示在这里。<br>每次调用的耗时、Tokens 和原始事件均可检查。</p><div class="suggestions"><button type="button" data-prompt="请用一句话介绍你自己，并说明你的模型名称。">介绍一下自己 ↗</button><button type="button" data-prompt="计算 17 × 23，并简要说明计算步骤。">测试推理能力 ↗</button></div></div></div>
+<form class="composer" id="message-form"><label class="sr-only" for="prompt">测试消息</label><textarea id="prompt" rows="3" placeholder="输入测试消息…" required></textarea><div class="composer-bottom"><label class="switch"><input id="stream" type="checkbox" checked><span></span> 流式输出</label><span class="keyboard">Ctrl / ⌘ + Enter 发送</span><button type="button" class="stop" id="stop" hidden>■ 停止</button><button type="submit" class="send" id="send">发送测试 <span>↗</span></button></div></form>
+<div class="metrics" aria-live="polite"><div><span class="metric-label">调用状态</span><strong id="metric-status">待开始</strong></div><div><span class="metric-label">耗时</span><strong id="metric-time">—</strong></div><div><span class="metric-label">输入 Tokens</span><strong id="metric-input">—</strong></div><div><span class="metric-label">输出 Tokens</span><strong id="metric-output">—</strong></div><div><span class="metric-label">总 Tokens</span><strong id="metric-total">—</strong></div></div>
+<details class="diagnostics"><summary><span>调用诊断 <small>原始结果与事件</small></span><span>⌄</span></summary><div class="diagnostic-toolbar"><span id="event-count">尚无调用记录</span><button type="button" id="copy" class="text-button">复制诊断</button></div><pre id="raw">{ "status": "ready" }</pre></details>
+</section>
+</div><footer><span>MODEL SDK · 独立模型调用模块</span><span>无自动重试 / 工具调用仅展示，不执行</span></footer>
+</main>
+</body></html>
