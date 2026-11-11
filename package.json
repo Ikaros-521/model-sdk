@@ -55,7 +55,7 @@
   },
   "scripts": {
     "build": "node scripts/patch-pi-ai.mjs && tsc -p tsconfig.json",
-    "test": "vitest run && node --import tsx --test test/embeddings.test.ts",
+    "test": "vitest run && node --import tsx --test test/embeddings.test.ts && node --test test/patch-pi-ai.test.mjs",
     "prepack": "npm run build",
     "test:consumer": "node scripts/verify-consumer.mjs",
     "pretest": "node scripts/patch-pi-ai.mjs",

@@ -6,13 +6,14 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const pkgRoot = resolve(root, 'node_modules/@earendil-works/pi-ai')
 const pkg = JSON.parse(await readFile(resolve(pkgRoot, 'package.json'), 'utf8'))
 if (pkg.version !== '1.3.0') throw new Error('Expected exact pi-ai 1.3.0')
-const patch = await readFile(resolve(root, 'patches/pi-ai-1.3.0.patch'), 'utf8')
+// Git may check out the patch as CRLF on Windows; npm tarballs normally use LF.
+const patch = (await readFile(resolve(root, 'patches/pi-ai-1.3.0.patch'), 'utf8')).replace(/\r\n/g, '\n')
 const hashes = {}
 for (const section of patch.split('diff --git ').slice(1)) {
   const file = section.match(/^a\/(\S+) b\/\1/m)?.[1]
   if (!file) throw new Error('Invalid patch path')
   const path = resolve(pkgRoot, file)
-  let source = await readFile(path, 'utf8')
+  let source = (await readFile(path, 'utf8')).replace(/\r\n/g, '\n')
   for (const hunk of section.split(/^@@[^\n]*\n/m).slice(1)) {
     const lines = hunk.replace(/\n$/, '').split('\n').filter(l => /^[ +\-]/.test(l))
     const before = lines.filter(l => !l.startsWith('+')).map(l => l.slice(1)).join('\n')
